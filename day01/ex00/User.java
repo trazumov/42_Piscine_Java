@@ -1,7 +1,7 @@
 public class User {
 
     private Integer id;
-    private String name;
+    private String  name;
     private Integer balance;
 
     public User(String name, int balance, int id) {

@@ -1,9 +1,9 @@
 
 public class UsersArrayList implements UsersList {
 
-    private User[]  storage;
-    private int     capacity;
-    private int     size;
+    private User[] storage;
+    private int capacity;
+    private int size;
 
     public UsersArrayList() {
         this.storage = new User[10];
@@ -43,11 +43,10 @@ public class UsersArrayList implements UsersList {
 
     public User retrieveByIndex(int index) {
         if (index >= size) {
-            throw new WrongIndexException("Exception: User Not Found by index: " + index);
+            throw new WrongIndexException("Exception: User Not Found by index: "
+                    + index + ". Last index - " + (size - 1));
         }
-        if (index < 0) {
-            throw new WrongIndexException("Exception: Index less then zero: " + index);
-        }
+
         return storage[index];
     }
 

@@ -7,19 +7,21 @@ public class Transaction {
         CREDIT
     }
 
-    private UUID                id;
-    private User                recipient;
-    private User                sender;
-    private Integer             amount;
-    private TransferCategory    category;
+    private UUID id;
+    private User recipient;
+    private User sender;
+    private Integer amount;
+    private TransferCategory category;
 
     public Transaction(UUID id, User recipient, User sender, Integer amount, TransferCategory category) {
         if ((amount > 0 && category == TransferCategory.CREDIT) ||
                 (amount < 0 && category == TransferCategory.DEBIT)) {
-            System.err.println("Can't create Transaction -> Wrong Transfer Category");
+            System.err.println("Can't create Transaction");
+            System.err.println("Wrong Transfer Category");
         } else if ((category == TransferCategory.DEBIT && sender.getBalance() < amount) ||
                 (category == TransferCategory.CREDIT && sender.getBalance() < -amount)) {
-            System.err.println("Can't create Transaction -> Insufficient balance");
+            System.err.println("Can't create Transaction");
+            System.err.println("Insufficient balance");
         } else {
             this.id = id;
             this.recipient = recipient;
