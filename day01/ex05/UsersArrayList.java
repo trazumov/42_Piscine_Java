@@ -1,13 +1,9 @@
+
 public class UsersArrayList implements UsersList {
 
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-
-    private User[]  storage;
-    private int     capacity;
-    private int     size;
+    private User[] storage;
+    private int capacity;
+    private int size;
 
     public UsersArrayList() {
         this.storage = new User[10];
@@ -33,7 +29,7 @@ public class UsersArrayList implements UsersList {
         }
         storage[size] = user;
         size++;
-        System.out.println(ANSI_GREEN +"User added: " + user.getName() + ANSI_RESET);
+        System.out.println("User with id = " + user.getId() + " is added");
     }
 
     public User retrieveByID(int id) {
@@ -42,16 +38,15 @@ public class UsersArrayList implements UsersList {
                 return storage[i];
             }
         }
-        throw new UserNotFoundException("Exception: User Not Found by id " + id);
+        throw new UserNotFoundException("User with id = " + id + " not found");
     }
 
     public User retrieveByIndex(int index) {
         if (index >= size) {
-            throw new WrongIndexException("Exception: User Not Found by index: " + index);
+            throw new WrongIndexException("Exception: User Not Found by index: "
+                    + index + ". Last index - " + (size - 1));
         }
-        if (index < 0) {
-            throw new WrongIndexException("Exception: Index less then zero: " + index);
-        }
+
         return storage[index];
     }
 
@@ -61,13 +56,14 @@ public class UsersArrayList implements UsersList {
 
     @Override
     public String toString() {
-        String str = "UsersArrayList:" +
+        String str = "UsersArrayList { " +
                 "capacity: " + this.capacity +
                 ", size: " + this.size + "\n";
 
         for (int i = 0; i < this.size; i++) {
             str += "\t[" + i + "] " + storage[i] + "\n";
         }
+        str += "}";
 
         return str;
     }

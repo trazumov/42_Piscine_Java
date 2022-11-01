@@ -29,7 +29,8 @@ public class Program {
         Transaction trFault1 = new Transaction(id, Bob, Nick, amount, credit);
         Transaction trFault2 = new Transaction(id, Bob, Nick, 2000, debit);
         Nick.setBalance(Nick.getBalance() - 2000);
-		System.out.println("Users data: " + "\n\t" + Bob + "\n\t" + Nick);
+        User Jessy = new User("Jessy", -1, userId++);
+		System.out.println("Users data: " + "\n\t" + Bob + "\n\t" + Nick + "\n\t" + Jessy);
     }
 
     public static boolean isValid(Transaction transaction) {
