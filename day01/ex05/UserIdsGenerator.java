@@ -1,11 +1,14 @@
 public class UserIdsGenerator {
-    private static UserIdsGenerator INSTANCE = new UserIdsGenerator();
+    private static UserIdsGenerator INSTANCE;
     private int id = 0;
 
     private UserIdsGenerator() {
     }
 
     public static UserIdsGenerator getInstance() {
+        if (INSTANCE == null) {
+            INSTANCE = new UserIdsGenerator();
+        }
         return INSTANCE;
     }
 

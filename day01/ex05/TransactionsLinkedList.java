@@ -2,17 +2,24 @@
 import java.util.UUID;
 
 public class TransactionsLinkedList implements TransactionsList {
-    private Node first;
-    private Node last;
-    private int size;
+
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_PURPLE = "\u001B[35m";
+
+    private Node    _head;
+    private Node    _last;
+    private int     _size;
 
     private static class Node {
-        Transaction item;
+        Transaction data;
         Node        next;
         Node        prev;
 
-        Node(Node prev, Transaction element, Node next) {
-            this.item = element;
+        Node(Node prev, Transaction data, Node next) {
+            this.data = data;
             this.next = next;
             this.prev = prev;
         }
@@ -20,17 +27,17 @@ public class TransactionsLinkedList implements TransactionsList {
 
     public TransactionsLinkedList() {}
 
-    public boolean add(Transaction e) {
-        final Node lst = last;
-        final Node newNode = new Node(lst, e, null);
-        last = newNode;
+    public boolean add(Transaction data) {
+        final Node last = _last;
+        final Node newNode = new Node(last, data, null);
+        _last = newNode;
 
-        if (lst == null) {
-            first = newNode;
+        if (last == null) {
+            _head = newNode;
         } else {
-            lst.next = newNode;
+            last.next = newNode;
         }
-        size++;
+        _size++;
 
         return true;
     }
@@ -40,8 +47,9 @@ public class TransactionsLinkedList implements TransactionsList {
             throw new TransactionNotFoundException("Transaction with 'null' UUID can't be removed");
         }
 
-        for (Node tmp = first; tmp != null; tmp = tmp.next) {
-            if (tmp.item != null && id.equals(tmp.item.getUUID())) {
+        for (Node tmp = _head; tmp != null; tmp = tmp.next) {
+            if (tmp.data != null && id.equals(tmp.data.getUUID())) {
+                System.out.println(ANSI_GREEN + "Removed transaction -> " + tmp.data + ANSI_RESET);
                 unlink(tmp);
                 return true;
             }
@@ -54,32 +62,32 @@ public class TransactionsLinkedList implements TransactionsList {
         final Node prev = tmp.prev;
 
         if (prev == null) {
-            this.first = next;
+            this._head = next;
         } else {
             prev.next = next;
             tmp.prev = null;
         }
 
         if (next == null) {
-            this.last = prev;
+            this._last = prev;
         } else {
             next.prev = prev;
             tmp.next = null;
         }
 
-        tmp.item = null;
-        size--;
+        tmp.data = null;
+        _size--;
     }
 
     public Transaction[]    toArray() {
-        if (this.size == 0) {
-            return new Transaction[0];
+        if (this._size == 0) {
+            return null;
         }
-        Transaction[] result = new Transaction[this.size];
+        Transaction[] result = new Transaction[this._size];
+        
         int i = 0;
-
-        for (Node tmp = first; tmp != null; tmp = tmp.next) {
-            result[i++] = tmp.item;
+        for (Node tmp = _head; tmp != null; tmp = tmp.next) {
+            result[i++] = tmp.data;
         }
 
         return result;
@@ -87,13 +95,12 @@ public class TransactionsLinkedList implements TransactionsList {
 
     @Override
     public String toString() {
-        String str = "TransactionsList { " +
-                "size: " + this.size + "\n";
+        String str = ANSI_PURPLE + "TransactionsList:" +
+                "size: " + this._size + "\n" + ANSI_RESET;
 
-        for (Node tmp = first; tmp != null; tmp = tmp.next) {
-            str += "\t" + tmp.item + "\n";
+        for (Node tmp = _head; tmp != null; tmp = tmp.next) {
+            str += ANSI_PURPLE + "\t" + tmp.data + "\n" + ANSI_RESET;
         }
-        str += "}";
 
         return str;
     }
