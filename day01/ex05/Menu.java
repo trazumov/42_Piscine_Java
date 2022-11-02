@@ -21,7 +21,7 @@ public class Menu {
             } else if (action == 2) {
                 getBalance();
             } else if (action == 3) {
-                transfer();
+                performTransfer();
             } else if (action == 4) {
                 viewTransactions();
             } else if (action == 5) {
@@ -52,21 +52,21 @@ public class Menu {
         int action;
 
         try {
-            String str = scanner.nextLine().trim();
-            action = Integer.parseInt(str);
+            action = Integer.parseInt(scanner.nextLine().trim());
 
-            if (!isValidAction(action)) {
+            if (!isValidOption(action)) {
                 throw new WrongDataException();
             }
         } catch (RuntimeException e) {
-            System.out.println("Invalid action. Enter valid number: ");
+            System.out.println("Invalid number. Enter valid number: ");
+            showInterface();
             action = action();
         }
 
         return action;
     }
 
-    private boolean isValidAction(int action) {
+    private boolean isValidOption(int action) {
         if (devMode && action > 0 && action <= 7) {
             return true;
         }
@@ -88,24 +88,18 @@ public class Menu {
                 throw new WrongDataException("Invalid data");
             }
             String name = data[0];
-            int balance = checkBalance(data[1]);
+            int balance = Integer.parseInt(data[1]);
+            if (balance < 0) {
+                throw new WrongDataException("Balance can't be negative");
+            }
             service.addUser(new User(name, balance));
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number in: " + str);
+            System.out.println("Invalid number in input: " + str);
             addUser();
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
             addUser();
         }
-    }
-
-    private int checkBalance(String data) {
-        int balance = Integer.parseInt(data);
-
-        if (balance < 0) {
-            throw new WrongDataException("Balance can't be negative");
-        }
-        return balance;
     }
 
     private void getBalance() {
@@ -117,13 +111,13 @@ public class Menu {
             User user = service.getUsersList().retrieveByID(id);
             System.out.println(user.getName() + " - " + user.getBalance());
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number in: " + str);
+            System.out.println("Incorrect input");
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
     }
 
-    private void transfer() {
+    private void performTransfer() {
         System.out.println("Enter a sender ID, a recipient ID, and a transfer amount");
         String str = scanner.nextLine().trim();
 
@@ -131,7 +125,7 @@ public class Menu {
             String[] data = str.split("\\s+");
 
             if (data.length != 3) {
-                throw new WrongDataException("Invalid data");
+                throw new WrongDataException("Invalid input");
             }
             int senderId = Integer.parseInt(data[0]);
             int recipientId = Integer.parseInt(data[1]);
@@ -159,7 +153,7 @@ public class Menu {
             }
             printTransactions(userId, transactions);
         } catch (NumberFormatException e) {
-            System.out.println("Invalid number in: " + str);
+            System.out.println("Incorrect input");
         } catch (RuntimeException e) {
             System.out.println(e.getMessage());
         }
