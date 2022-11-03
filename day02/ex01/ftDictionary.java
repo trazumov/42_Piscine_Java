@@ -17,13 +17,6 @@ public class ftDictionary {
 		return INSTANCE.size();
 	}
 
-	public void printdata() {
-		for (int i = 0; i < INSTANCE.size(); i++) {
-			System.out.println(INSTANCE.get(i));
-		  }
-	}
-
-
 	public void fillDictionary(String file) {
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(file));
