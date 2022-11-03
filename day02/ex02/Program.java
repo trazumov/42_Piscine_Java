@@ -17,7 +17,7 @@ public class Program {
         }
         String absolutePath = args[0].substring("--current-folder=".length());
         path = Paths.get(absolutePath);
-        ProgramUtils.checkAbsolutePath(path);
+        Utils.checkAbsolutePath(path);
         System.out.println(path);
 
         while (true) {
@@ -78,11 +78,11 @@ public class Program {
                 long size;
 
                 if (Files.isDirectory(item)) {
-                    size = ProgramUtils.directorySize(item);
+                    size = Utils.directorySize(item);
                 } else {
                     size = Files.size(item);
                 }
-                System.out.println(item.getFileName() + " " + ProgramUtils.getSize(size));
+                System.out.println(item.getFileName() + " " + Utils.getSize(size));
             }
         } catch(IOException e) {
             System.out.println(e.getMessage());

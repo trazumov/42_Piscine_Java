@@ -3,7 +3,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class ProgramUtils {
+public class Utils {
     public static long directorySize(Path directory) {
         long size = 0;
 
