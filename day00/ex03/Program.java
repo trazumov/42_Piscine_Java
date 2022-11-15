@@ -1,96 +1,75 @@
-import java.util.Scanner;
+import java.util.UUID;
 
 public class Program {
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+    public static final String ANSI_YELLOW = "\u001B[33m";
+    public static final String ANSI_BLUE = "\u001B[34m";
+
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        long testResults = 0;
-        String input;
+        User Bob = new User("Bob", 1000);
+        User Nick = new User("Nick", 1000);
 
-        for (int week = 1; week < 19; week++) {
-            long minEvaluation = 10;
-            long newEvaluation;
-            input = scan.next();
+        System.out.println("Bob: " + Bob + "\nBob list: \n\t" + Bob.getList());
+        System.out.println("Nick: " + Nick + "\nNick list: \n\t" + Nick.getList());
 
-            if (input.equals("42")) {
-                printResults(testResults);
-                break;
-            } else if (!input.equals("Week")) {
-                scan.close();
-                illegalArgument();
-            }
+        System.out.println("\nLET'S CREATE TRANSACTIONS:");
+        createTransaction(Bob, Nick, 200);
+        createTransaction(Nick, Bob, 100);
+        createTransaction(Nick, Bob, 150);
+        createTransaction(Nick, Bob, -50);
 
-            if (week != findInt(scan)) {
-                scan.close();
-                illegalArgument();
-            }
+        System.out.println("Bob: " + Bob + "\nBob list: \n" + Bob.getList());
+        System.out.println("Nick: " + Nick + "\nNick list: \n" + Nick.getList());
 
-            for (int i = 0; i < 5; i++) {
-                newEvaluation = findInt(scan);
+        System.out.println("\nREMOVE TRANSACTION:");
+        Transaction[] transactions = Bob.getList().toArray();
+        Transaction toRemove = transactions[1];
+        Bob.getList().remove(toRemove.getUUID());
+        Nick.getList().remove(toRemove.getUUID());
+        System.out.println("Bob: " + Bob + "\nBob list: \n" + Bob.getList());
+        System.out.println("Nick: " + Nick + "\nNick list: \n" + Nick.getList());
 
-                if (newEvaluation < 1 || newEvaluation > 9) {
-                    scan.close();
-                    illegalArgument();
-                }
-
-                if (newEvaluation < minEvaluation) {
-                    minEvaluation = newEvaluation;
-                }
-            }
-            testResults = testResults * 10 + minEvaluation;
-
-            if (week == 18) {
-                printResults(testResults);
-                break;
-            }
+        try {
+            System.out.println("\nTRY TO REMOVE TRANSACTION WITH WRONG UUID:");
+            Bob.getList().remove(toRemove.getUUID());
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
-        scan.close();
-    }
 
-    public static void illegalArgument() {
-        System.err.println("Illegal Argument");
-        System.exit(-1);
-    }
-
-    public static int findInt(Scanner scan) {
-        if (!scan.hasNextInt()) {
-            scan.close();
-            illegalArgument();
+        try {
+            System.out.println("\nTRY TO REMOVE TRANSACTION WITH null UUID:");
+            Nick.getList().remove(null);
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
         }
-        int num = scan.nextInt();
-
-        return num;
     }
 
-    public static void printResults(long tests) {
-        long len = 1;
-        long i;
+    public static void createTransaction(User recipient, User sender, int amount) {
+        Transaction.TransferCategory debit = Transaction.TransferCategory.DEBIT;
+        Transaction.TransferCategory credit = Transaction.TransferCategory.CREDIT;
 
-        for (; tests / len > 10; len *= 10);
+        if (amount < 0) {
+            System.err.println("Incorrect data - you can't send less then zero");
+            return ;
+        }
 
-        for (int week = 1; tests != 0; week++, len /= 10) {
-            i = tests / len;
-            System.out.print("Week " + week + " ");
+        if (sender.getBalance() >= amount) {
+            UUID id = UUID.randomUUID();
+            Transaction trDebit = new Transaction(id, recipient, sender, amount, debit);
+            Transaction trCredit = new Transaction(id, recipient, sender, -1 * amount, credit);
 
-            if (i == 1) {
-                System.out.println("=>");
-            } else if (i == 2) {
-                System.out.println("==>");
-            } else if (i == 3) {
-                System.out.println("===>");
-            } else if (i == 4) {
-                System.out.println("====>");
-            } else if (i == 5) {
-                System.out.println("=====>");
-            } else if (i == 6) {
-                System.out.println("======>");
-            } else if (i == 7) {
-                System.out.println("=======>");
-            } else if (i == 8) {
-                System.out.println("========>");
-            } else if (i == 9) {
-                System.out.println("=========>");
-            }
-            tests = tests - len * i;
+            recipient.setBalance(recipient.getBalance() + amount);
+            sender.setBalance(sender.getBalance() - amount);
+
+            recipient.getList().add(trDebit);
+            sender.getList().add(trCredit);
+            
+            System.out.println(ANSI_BLUE + trDebit + ANSI_RESET);
+            System.out.println(ANSI_BLUE + trCredit + ANSI_RESET);
+        } else {
+            System.err.println("Insufficient balance");
         }
     }
 }

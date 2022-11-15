@@ -1,39 +1,13 @@
-import java.util.Scanner;
-
 public class Program {
-
     public static void main(String[] args) {
-        Scanner scan = new Scanner(System.in);
-        int steps = 1;
-        int i = 2;
-        int num;
-
-        if (scan.hasNextInt() == false) {
-            System.err.println("Illegal Argument");
-            scan.close();
-            System.exit(-1);
+        
+        for (int i = 0; i < 10; i++) {
+            System.out.println(new User("User" + i, i * 2));    
         }
-        num = scan.nextInt();
 
-        if (num < 2) {
-            System.err.println("Illegal Argument");
-            scan.close();
-            System.exit(-1);
-        } else if (num == 2) {
-            System.out.println("true 1");
-        } else {
-            while (i * i < num && num % i != 0) {
-                i++;
-                steps++;
-            }
-
-            if (num % i != 0) {
-                System.out.print("true ");
-            } else {
-                System.out.print("false ");
-            }
-            System.out.println(steps);
-        }
-        scan.close();
+        User Bob = new User("Bob", 1000);
+        System.out.println(Bob);
+        
+        System.out.println("Last generated Id: " + UserIdsGenerator.getInstance().lastGeneratedId());
     }
 }
