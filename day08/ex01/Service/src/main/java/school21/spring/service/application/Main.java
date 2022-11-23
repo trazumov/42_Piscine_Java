@@ -13,6 +13,7 @@ public class Main {
         System.out.println("usersRepositoryJdbc:");
         System.out.println(usersRepository.findAll());
         System.out.println("");
+
         System.out.println("usersRepositoryJdbcTemplate:");
         usersRepository = context.getBean("usersRepositoryJdbcTemplate", UsersRepository.class);
         System.out.println(usersRepository.findAll());
